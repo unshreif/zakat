@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./file.js"></script>
+    <title>Zakah calculator</title>
+</head>
+<body>
+<div>
+    <h3>Calculate your zakat</h3>
+    <br>
+    <p>إِنَّ الْمُصَّدِّقِينَ وَالْمُصَّدِّقَاتِ وَأَقْرَضُوا اللَّهَ قَرْضًا حَسَنًا يُضَاعَفُ لَهُمْ وَلَهُمْ أَجْرٌ كَرِيمٌ.</p>
+    <br>
+    <form onsubmit="return processForm()">
+    <input type="number" placeholder=" amount" id="amount">
+    <br>
+    <button type="submit" style="background-color: black; color:white; width:80px; border-radius:20px">Calculate</button>
+    <br>
+    <p id="thezakah"></p>
+    <script>
+        function processForm() {
+  let amount = document.getElementById("amount").value;
+    let zakah = amount * 0.025;
+    document.getElementById("thezakah").innerHTML = "Your zakah is: " + zakah;
+  return false;
+}
+
+    </script>
+    <br>
+    </form>
+</div>
+
+</body>
+</html>
