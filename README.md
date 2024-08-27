@@ -8,6 +8,9 @@ This repository contains a simple Zakat calculator that helps Muslims easily det
 - Calculate Zakat based on your assets and liabilities.
 - Easy-to-use interface.
 
+## screenshot 
+
+![screenshot](https://ucarecdn.com/bfbc8c14-6a9e-4cdd-b237-cac2df3dc4fd/screencaptureunshreifgithubiozakat2024082719_26_07.png)
 
 ## Contribution
 
