@@ -3,35 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="./file.js"></script>
-    <title>Zakah calculator</title>
+    <title>Modern Zakat Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div>
-    <h3>Calculate your zakat</h3>
-    <br>
-    <p>إِنَّ الْمُصَّدِّقِينَ وَالْمُصَّدِّقَاتِ وَأَقْرَضُوا اللَّهَ قَرْضًا حَسَنًا يُضَاعَفُ لَهُمْ وَلَهُمْ أَجْرٌ كَرِيمٌ.</p>
-    <br>
-    <form onsubmit="return processForm()">
-    <input type="number" placeholder=" amount" id="amount">
-    <br>
-    <button type="submit" style="background-color: black; color:white; width:80px; border-radius:20px">Calculate</button>
-    <br>
-    <p id="thezakah"></p>
-    <script>
-        function processForm() {
-  let amount = document.getElementById("amount").value;
-    let zakah = amount * 0.025;
-    document.getElementById("thezakah").innerHTML = "Your zakah is: " + zakah;
-  return false;
-}
+    <div class="container">
+        
 
-    </script>
-    <br>
-    </form>
-</div>
+        <header>
+            <div class="logo">
+                <i class="fas fa-moon"></i>
+                <h1><span class="translate" data-key="title">Zakat</span> <span class="translate" data-key="calculator">Calculator</span></h1>
+            </div>
+            
+        </header>
 
+        <!-- Decorative elements -->
+        <div class="decoration decoration-1"></div>
+        <div class="decoration decoration-2"></div>
+
+        <div class="calculator-container">
+            <!-- Settings panel with theme toggle and calc mode -->
+            <div class="controls-panel">
+                <div class="theme-toggle">
+                    <span><i class="fas fa-sun"></i></span>
+                    <label class="switch">
+                        <input type="checkbox" id="theme-switch">
+                        <span class="slider round"></span>
+                    </label>
+                    <span><i class="fas fa-moon"></i></span>
+                </div>
+                
+                <div class="calc-mode-toggle">
+                    <span class="translate" data-key="calcMode">Calculation Mode:</span>
+                    <div class="toggle-buttons">
+                        <button class="mode-btn active" data-mode="monthly"><span class="translate" data-key="monthly">Monthly</span></button>
+                        <button class="mode-btn" data-mode="yearly"><span class="translate" data-key="yearly">Yearly</span></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="calculator-wrapper">
+                <div class="settings-panel">
+                    <div class="setting">
+                        <label for="currency">Currency:</label>
+                        <select id="currency">
+                            <option value="USD">USD ($)</option>
+                            <option value="EUR">EUR (€)</option>
+                            <option value="GBP">GBP (£)</option>
+                            <option value="SAR">SAR (﷼)</option>
+                            <option value="MYR">MYR (RM)</option>
+                            <option value="INR">INR (₹)</option>
+                        </select>
+                    </div>
+                    <div class="setting">
+                        <label for="nisab-method">Nisab Calculation Method:</label>
+                        <select id="nisab-method">
+                            <option value="gold">Gold Standard</option>
+                            <option value="silver">Silver Standard</option>
+                        </select>
+                    </div>
+                    <div class="setting">
+                        <label for="calculation-date">Calculation Date:</label>
+                        <input type="date" id="calculation-date">
+                    </div>
+                </div>
+
+                <div class="calculation-form">
+                    <div class="section assets-section">
+                        <div class="section-header">
+                            <h2>Assets</h2>
+                            <button class="add-btn add-asset"><i class="fas fa-plus-circle"></i> Add Asset</button>
+                        </div>
+                        <div class="asset-items">
+                            <div class="asset-item">
+                                <div class="form-group">
+                                    <label for="cash">Cash on Hand and Bank Deposits:</label>
+                                    <input type="number" id="cash" placeholder="0.00" min="0" step="0.01">
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="form-group">
+                                    <label for="gold-silver">Gold and Silver (Market Value):</label>
+                                    <input type="number" id="gold-silver" placeholder="0.00" min="0" step="0.01">
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="form-group">
+                                    <label for="stocks">Stocks and Investments:</label>
+                                    <input type="number" id="stocks" placeholder="0.00" min="0" step="0.01">
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="form-group">
+                                    <label for="property">Property and Real Estate:</label>
+                                    <input type="number" id="property" placeholder="0.00" min="0" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section liabilities-section">
+                        <div class="section-header">
+                            <h2>Liabilities</h2>
+                            <button class="add-btn add-liability"><i class="fas fa-plus-circle"></i> Add Liability</button>
+                        </div>
+                        <div class="liability-items">
+                            <div class="liability-item">
+                                <div class="form-group">
+                                    <label for="debts">Debts and Loans:</label>
+                                    <input type="number" id="debts" placeholder="0.00" min="0" step="0.01">
+                                </div>
+                            </div>
+                            <div class="liability-item">
+                                <div class="form-group">
+                                    <label for="expenses">Expenses:</label>
+                                    <input type="number" id="expenses" placeholder="0.00" min="0" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calculate-btn-container">
+                        <button id="calculate-zakat" class="calculate-btn translate" data-key="calculateZakat">Calculate Zakat</button>
+                    </div>
+
+                    <div class="section results-section">
+                        <h2 class="translate" data-key="results">Results</h2>
+                        <div class="mode-indicator">
+                            <span class="translate" data-key="monthlyIndicator">Monthly Calculation</span>
+                        </div>
+                        <div class="results">
+                            <div class="result-card">
+                                <div class="result-icon"><i class="fas fa-coins"></i></div>
+                                <div class="result-label">Total Assets</div>
+                                <div class="result-value" id="total-assets">0.00</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                                <div class="result-label">Total Liabilities</div>
+                                <div class="result-value" id="total-liabilities">0.00</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-icon"><i class="fas fa-balance-scale"></i></div>
+                                <div class="result-label">Net Assets</div>
+                                <div class="result-value" id="net-assets">0.00</div>
+                            </div>
+                            <div class="result-card highlight">
+                                <div class="result-icon"><i class="fas fa-heart"></i></div>
+                                <div class="result-label">Zakat Due</div>
+                                <div class="result-value" id="zakat-due">0.00</div>
+                            </div>
+                        </div>
+                    
+                </div>
+            </div>
+        </div>
+
+     
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
