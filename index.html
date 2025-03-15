@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Zakat Calculator</title>
+    <title>Zakat</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <meta name="description" content="A modern Zakat calculator with real-time currency conversion and precious metal prices">
+    <meta name="theme-color" content="#4CAF50">
 </head>
 <body>
     <div class="container">
@@ -16,17 +18,15 @@
         <header>
             <div class="logo">
                 <i class="fas fa-moon"></i>
-                <h1><span class="translate" data-key="title">Zakat</span> <span class="translate" data-key="calculator">Calculator</span></h1>
+                <h1><span class="translate" data-key="title">Zakat</span></h1>
             </div>
             
         </header>
 
-        <!-- Decorative elements -->
         <div class="decoration decoration-1"></div>
         <div class="decoration decoration-2"></div>
 
         <div class="calculator-container">
-            <!-- Settings panel with theme toggle and calc mode -->
             <div class="controls-panel">
                 <div class="theme-toggle">
                     <span><i class="fas fa-sun"></i></span>
@@ -57,6 +57,14 @@
                             <option value="SAR">SAR (﷼)</option>
                             <option value="MYR">MYR (RM)</option>
                             <option value="INR">INR (₹)</option>
+                            <option value="AED">AED (د.إ)</option>
+                            <option value="CAD">CAD ($)</option>
+                            <option value="AUD">AUD ($)</option>
+                            <option value="SGD">SGD ($)</option>
+                            <option value="PKR">PKR (₨)</option>
+                            <option value="BDT">BDT (৳)</option>
+                            <option value="IDR">IDR (Rp)</option>
+                            <option value="EGP">EGP (£)</option>
                         </select>
                     </div>
                     <div class="setting">
@@ -158,13 +166,36 @@
                                 <div class="result-value" id="zakat-due">0.00</div>
                             </div>
                         </div>
-                    
+                        
+                        <div class="zakat-explanation">
+                            <div class="info-icon"><i class="fas fa-info-circle"></i></div>
+                            <p class="translate" data-key="monthlyExplanation">
+                                This calculator shows your monthly Zakat amount (approximately 0.208% of eligible assets). 
+                                Traditional Zakat is 2.5% annually, but monthly payment can help with budgeting.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <footer>
+            <div class="footer-content">
+                <p>
+                    <span class="translate" data-key="learnMore">Learn more about</span> 
+                    <a href="https://en.wikipedia.org/wiki/Zakat" target="_blank">
+                        <span class="translate" data-key="zakatImportance">Zakat and its importance</span>
+                    </a> 
+                    <span class="translate" data-key="inIslam">in Islam.</span>
+                </p>
+            
+            </div>
+        </footer>
      
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="api.js"></script>
+    <script src="visualization.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

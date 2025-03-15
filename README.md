@@ -1,25 +1,82 @@
+# Modern Zakat Calculator
 
-# Zakat Calculator
-
-This repository contains a simple Zakat calculator that helps Muslims easily determine the amount of Zakat they need to pay. Zakat is one of the Five Pillars of Islam and is a form of obligatory charity.
+A beautiful, responsive, and feature-rich Zakat calculator web application to help Muslims calculate their obligatory charity (Zakat) accurately based on their financial assets.
 
 ## Features
 
-- Calculate Zakat based on your assets and liabilities.
-- Easy-to-use interface.
+- **Modern UI**: Clean, intuitive interface with both light and dark theme support
+- **Calculation Modes**: Calculate Zakat on a monthly or yearly basis
+- **Multiple Currency Support**: Calculate in USD, EUR, GBP, SAR, MYR, INR and more
+- **Nisab Standards**: Choose between Gold and Silver standard for Nisab threshold
+- **Dynamic Fields**: Add custom assets and liabilities as needed
+- **Real-time Calculations**: Fast, client-side calculations with visual feedback
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- **Multilingual Support**: Interface available in English and Arabic (expandable to more languages)
+- **Data Visualization**: Interactive charts for better financial insights
 
-## screenshot 
+## How to Use
 
-![screenshot](https://ucarecdn.com/bfbc8c14-6a9e-4cdd-b237-cac2df3dc4fd/screencaptureunshreifgithubiozakat2024082719_26_07.png)
+1. **Select Your Preferences**:
+   - Choose your preferred currency
+   - Select a Nisab calculation method (Gold or Silver standard)
+   - Set the calculation date
 
-## Contribution
+2. **Enter Your Financial Data**:
+   - Add values for your assets (cash, gold/silver, investments, property)
+   - Enter your liabilities (debts, expenses)
+   - Add custom assets or liabilities as needed
 
-Feel free to contribute to the project by submitting a pull request. Before contributing, please ensure that your changes are well-tested and documented.
+3. **Calculate Your Zakat**:
+   - Click "Calculate Zakat" to see your results
+   - View your total assets, liabilities, net assets, and Zakat due
+   - Explore visual breakdowns of your financial data
+
+## About Zakat
+
+Zakat is one of the Five Pillars of Islam, requiring Muslims who meet the necessary criteria of wealth to donate 2.5% of their qualifying assets to those in need. It is typically calculated annually, but this calculator also provides a monthly option to help with financial planning.
+
+The Nisab threshold (minimum amount for Zakat eligibility) can be calculated using either the Gold standard (approximately 85 grams of gold) or Silver standard (approximately 595 grams of silver).
+
+## Technical Details
+
+This application is built using:
+
+- **Frontend**: HTML5, CSS3 with custom variables for theming
+- **JavaScript**: Vanilla JavaScript with modern ES6+ features
+- **Visualization**: Chart.js for interactive data visualization
+- **API Integration**: Real-time currency conversion and precious metal prices
+- **UI Components**: Font Awesome for icons, Google Fonts for typography
+- **Localization**: Built-in translation system for multilingual support
+
+No server-side processing is required as all calculations happen in the browser.
+
+## Project Structure
+
+- `index.html` - Main application structure and UI components
+- `styles.css` - Styling with responsive design and theme support
+- `script.js` - Core application logic and event handling
+- `api.js` - API integration for currency and metal price data
+- `visualization.js` - Chart generation and data visualization
+
+## Installation
+
+Simply download or clone the repository and open index.html in a web browser. No build process or server is required.
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/zakat-calculator.git
+
+# Navigate to the project directory
+cd zakat-calculator
+
+# Open in your browser
+# You can simply double-click index.html or use a local server
+```
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is open source and available under the MIT License.
 
-## Contact
+## Contributing
 
-If you have any questions or feedback, feel free to open an issue on GitHub or contact [unshreif](https://github.com/unshreif) directly.
+Contributions are welcome! Feel free to submit issues or pull requests to help improve this Zakat calculator.

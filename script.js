@@ -191,65 +191,256 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Initialize the API module
+    window.ZakatAPI.init({
+        // You can provide API keys here if available
+        // metalPriceAPIKey: 'YOUR_METAL_PRICE_API_KEY',
+        // currencyAPIKey: 'YOUR_CURRENCY_API_KEY',
+        cacheEnabled: true,
+        cacheDuration: 3600000 // 1 hour
+    });
+    
+    // Fetch real-time Nisab values using the API module
+    async function fetchNisabValues() {
+        try {
+            const nisabValues = await window.ZakatAPI.getNisabValues();
+            console.log('Nisab values:', nisabValues);
+            return nisabValues;
+        } catch (error) {
+            console.error('Error fetching nisab values:', error);
+            return {
+                gold: 4400, // USD value for ~85 grams of gold
+                silver: 560  // USD value for ~595 grams of silver
+            };
+        }
+    }
+    
+    // Get currency rates using the API module
+    async function getCurrencyRates() {
+        try {
+            const currencyData = await window.ZakatAPI.fetchCurrencyRates();
+            return currencyData.rates;
+        } catch (error) {
+            console.error('Error fetching currency rates:', error);
+            // Fallback currency rates
+            return {
+                USD: 1,
+                EUR: 0.85,
+                GBP: 0.75,
+                SAR: 3.75,
+                MYR: 4.16,
+                INR: 74.5,
+                AED: 3.67,
+                CAD: 1.25,
+                AUD: 1.35,
+                SGD: 1.35
+            };
+        }
+    }
+    
+    // Initialize currency rates
+    let currencyRates = {
+        USD: 1,
+        EUR: 0.85,
+        GBP: 0.75,
+        SAR: 3.75,
+        MYR: 4.16,
+        INR: 74.5
+    };
+    
+    // Update currency rates on page load
+    (async function() {
+        try {
+            currencyRates = await getCurrencyRates();
+            console.log('Currency rates updated:', currencyRates);
+        } catch (error) {
+            console.warn('Using fallback currency rates');
+        }
+    })();
+    
     // Calculate button functionality
     document.getElementById('calculate-zakat').addEventListener('click', calculateZakat);
     
-    function calculateZakat() {
-        // Get all asset values
-        let totalAssets = 0;
-        const assetInputs = document.querySelectorAll('.asset-items input[type="number"]');
-        assetInputs.forEach(input => {
-            const value = parseFloat(input.value) || 0;
-            totalAssets += value;
-        });
+    async function calculateZakat() {
+        // Show loading indicator
+        const calculateBtn = document.getElementById('calculate-zakat');
+        const lang = localStorage.getItem('language') || 'en';
+        calculateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + translations[lang].calculateZakat;
+        calculateBtn.disabled = true;
         
-        // Get all liability values
-        let totalLiabilities = 0;
-        const liabilityInputs = document.querySelectorAll('.liability-items input[type="number"]');
-        liabilityInputs.forEach(input => {
-            const value = parseFloat(input.value) || 0;
-            totalLiabilities += value;
-        });
+        // Add loading class to results section
+        const resultsSection = document.querySelector('.results-section');
+        resultsSection.classList.add('loading');
         
-        // Calculate net assets
-        const netAssets = totalAssets - totalLiabilities;
+        try {
+            // Get all asset values
+            let totalAssets = 0;
+            const assetInputs = document.querySelectorAll('.asset-items input[type="number"]');
+            assetInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                totalAssets += value;
+            });
+            
+            // Get all liability values
+            let totalLiabilities = 0;
+            const liabilityInputs = document.querySelectorAll('.liability-items input[type="number"]');
+            liabilityInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                totalLiabilities += value;
+            });
+            
+            // Calculate net assets
+            const netAssets = totalAssets - totalLiabilities;
+            
+            // Get nisab method and currency
+            const nisabMethod = document.getElementById('nisab-method').value;
+            const currency = document.getElementById('currency').value;
+            
+            // Get real-time currency rates if needed
+            if (!currencyRates[currency]) {
+                console.log('Fetching updated currency rates...');
+                currencyRates = await getCurrencyRates();
+            }
+            
+            // Get real-time or fallback nisab values
+            const nisabValues = await fetchNisabValues();
+            
+            // Convert nisab value to selected currency
+            const nisabInSelectedCurrency = nisabValues[nisabMethod] * (1 / currencyRates[currency]);
+            
+            let zakatDue = 0;
+            // Apply calculation mode
+            const zakatRate = calculationMode === 'monthly' ? 0.025 / 12 : 0.025; // 0.025 is 2.5%
+            
+            // Only calculate Zakat if net assets are above nisab threshold
+            if (netAssets >= nisabInSelectedCurrency) {
+                zakatDue = netAssets * zakatRate; // Monthly or yearly rate
+            }
+            
+            // Update results
+            const currencyFormatter = new Intl.NumberFormat(undefined, {
+                style: 'currency',
+                currency: currency
+            });
+            
+            // Show nisab threshold in the UI
+            const nisabThreshold = document.createElement('div');
+            nisabThreshold.className = 'nisab-info';
+            nisabThreshold.innerHTML = `
+                <div class="info-icon"><i class="fas fa-info-circle"></i></div>
+                <p>Nisab threshold (${nisabMethod === 'gold' ? 'Gold' : 'Silver'} standard): 
+                   <strong>${currencyFormatter.format(nisabInSelectedCurrency)}</strong></p>
+            `;
+            
+            // Update result values
+            document.getElementById('total-assets').textContent = currencyFormatter.format(totalAssets);
+            document.getElementById('total-liabilities').textContent = currencyFormatter.format(totalLiabilities);
+            document.getElementById('net-assets').textContent = currencyFormatter.format(netAssets);
+            document.getElementById('zakat-due').textContent = currencyFormatter.format(zakatDue);
+            
+            // Add nisab info after the results
+            const explanationBox = document.querySelector('.zakat-explanation');
+            if (explanationBox.previousElementSibling && explanationBox.previousElementSibling.classList.contains('nisab-info')) {
+                explanationBox.parentNode.removeChild(explanationBox.previousElementSibling);
+            }
+            explanationBox.parentNode.insertBefore(nisabThreshold, explanationBox);
+            
+            // Add animation to results section
+            resultsSection.style.display = 'block';
+            resultsSection.classList.remove('loading');
+            
+            // Animate the results
+            const resultCards = document.querySelectorAll('.result-card');
+            resultCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('animate');
+                }, index * 150);
+            });
+            
+            // Update visualization if available
+            if (window.ZakatVisualization) {
+                // Pass the financial data to the visualization module
+                window.ZakatVisualization.update({
+                    totalAssets,
+                    totalLiabilities,
+                    netAssets,
+                    zakatDue
+                });
+            }
+            
+            // Save calculation to localStorage for history
+            saveCalculationHistory({
+                date: new Date().toISOString(),
+                currency,
+                nisabMethod,
+                totalAssets,
+                totalLiabilities,
+                netAssets,
+                zakatDue,
+                calculationMode
+            });
+            
+        } catch (error) {
+            console.error('Error calculating zakat:', error);
+            resultsSection.classList.remove('loading');
+            
+            // Show error message in a more user-friendly way
+            const errorBox = document.createElement('div');
+            errorBox.className = 'error-message';
+            errorBox.innerHTML = `
+                <div class="error-icon"><i class="fas fa-exclamation-circle"></i></div>
+                <p>There was an error calculating your Zakat. Please try again or check your inputs.</p>
+            `;
+            
+            // Remove any existing error message
+            const existingError = document.querySelector('.error-message');
+            if (existingError) {
+                existingError.parentNode.removeChild(existingError);
+            }
+            
+            // Add error message to the page
+            const calculateBtnContainer = document.querySelector('.calculate-btn-container');
+            calculateBtnContainer.parentNode.insertBefore(errorBox, calculateBtnContainer.nextSibling);
+            
+            // Auto-remove error after 5 seconds
+            setTimeout(() => {
+                if (errorBox.parentNode) {
+                    errorBox.parentNode.removeChild(errorBox);
+                }
+            }, 5000);
+        } finally {
+            // Restore calculate button
+            calculateBtn.innerHTML = translations[lang].calculateZakat;
+            calculateBtn.disabled = false;
+        }
+    }
+    
+    // Function to save calculation history
+    function saveCalculationHistory(calculation) {
+        const history = JSON.parse(localStorage.getItem('zakatHistory') || '[]');
+        history.unshift(calculation); // Add to beginning of array
         
-        // Get nisab method and calculate zakat
-        const nisabMethod = document.getElementById('nisab-method').value;
-        const currency = document.getElementById('currency').value;
-        
-        // Sample nisab values (should be updated with real-time values)
-        const nisabValues = {
-            'gold': 4400, // USD value for ~85 grams of gold
-            'silver': 560  // USD value for ~595 grams of silver
-        };
-        
-        let zakatDue = 0;
-        // Apply calculation mode
-        const zakatRate = calculationMode === 'monthly' ? 0.025 / 12 : 0.025; // 0.025 is 2.5%
-        
-        if (netAssets >= nisabValues[nisabMethod]) {
-            zakatDue = netAssets * zakatRate; // Monthly or yearly rate
+        // Keep only the last 10 calculations
+        if (history.length > 10) {
+            history.pop();
         }
         
-        // Update results
-        const currencyFormatter = new Intl.NumberFormat(undefined, {
-            style: 'currency',
-            currency: currency
-        });
-        
-        document.getElementById('total-assets').textContent = currencyFormatter.format(totalAssets);
-        document.getElementById('total-liabilities').textContent = currencyFormatter.format(totalLiabilities);
-        document.getElementById('net-assets').textContent = currencyFormatter.format(netAssets);
-        document.getElementById('zakat-due').textContent = currencyFormatter.format(zakatDue);
-        
-        // Animate the results
-        const resultCards = document.querySelectorAll('.result-card');
-        resultCards.forEach(card => {
-            card.classList.add('animate');
-            setTimeout(() => {
-                card.classList.remove('animate');
-            }, 1000);
-        });
+        localStorage.setItem('zakatHistory', JSON.stringify(history));
     }
+    
+    // Add additional event listener for Enter key press on input fields
+    const inputFields = document.querySelectorAll('input[type="number"]');
+    inputFields.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateZakat();
+            }
+        });
+    });
+    
+    // Update currency rate on currency change
+    document.getElementById('currency').addEventListener('change', function() {
+        // You could fetch real-time currency rates here
+        // For now, we're using the static rates defined above
+    });
 });
